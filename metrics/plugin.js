@@ -6,7 +6,7 @@ import GoogleTagManagerMetric from '@/modules/metrics/contollers/GoogleTagManage
 
 
 
-async function getIds(ids) {
+function getIds(ids) {
     const type = typeof ids;
 
     if (type === 'function') {
@@ -27,7 +27,7 @@ async function initMetrics({controller, id, context} = {}) {
         throw TypeError('[metrics] Не передан контроллер или идентификаторы');
     }
 
-    const idList = await getIds.call(context, id);
+    const idList = getIds.call(context, id);
 
     return idList.map((_id) => new controller(_id))
 }
