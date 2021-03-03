@@ -60,7 +60,7 @@ class MetricInterface {
     /**
      * Проксирует вызов к оригинальному объекту метрики
      */
-    call() {
+    send() {
         if (!this.controller) {
             return undefinedMetric.apply(null, arguments);
         }

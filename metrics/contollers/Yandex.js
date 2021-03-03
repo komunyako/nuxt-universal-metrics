@@ -45,14 +45,16 @@ class YandexMetric extends MetricInterface {
 
     initController() {
         // Инициализируем глобальные переменные чтобы можно было уже записывать события
-        if (window[this.globalName]) {
-            this.controller = window[this.globalName];
+        const name = this.globalName;
+
+        if (window[name]) {
+            this.controller = window[name];
         } else {
-            this.controller = window[this.globalName] = window[this.globalName] || function() {
-                (window[this.globalName].a = window[this.globalName].a || []).push(arguments);
+            this.controller = window[name] = window[name] || function() {
+                (window[name].a = window[name].a || []).push(arguments);
             };
 
-            window[this.globalName].l = 1 * new Date();
+            this.controller.l = 1 * new Date();
         }
     }
 
@@ -73,7 +75,7 @@ class YandexMetric extends MetricInterface {
             }
 
             this.log('GOAL', payload);
-            this.controller(this.id, 'reachGoal', payload.target, extra);
+            this.send(this.id, 'reachGoal', payload.target, extra);
 
         } catch (error) {
             console.error(error);
@@ -97,7 +99,7 @@ class YandexMetric extends MetricInterface {
             }
 
             this.log('HIT', payload);
-            this.controller(this.id, 'hit', payload.to);
+            this.send(this.id, 'hit', payload.to);
 
         } catch (error) {
             console.error(error);

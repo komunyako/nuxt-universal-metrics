@@ -45,17 +45,19 @@ class GoogleAnalyticsMetric extends MetricInterface {
 
     initController() {
         // Инициализируем глобальные переменные чтобы можно было уже записывать события
-        if (window[this.globalName]) {
-            this.controller = window[this.globalName];
+        const name = this.globalName;
+
+        if (window[name]) {
+            this.controller = window[name];
         } else {
-            this.controller = window[this.globalName] = window[this.globalName] || function() {
-                (window[this.globalName].q = window[this.globalName].q || []).push(arguments);
+            this.controller = window[name] = window[name] || function() {
+                (window[name].q = window[name].q || []).push(arguments);
             };
 
-            window[this.globalName].l = 1 * new Date();
+            this.controller.l = 1 * new Date();
         }
 
-        this.controller('create', this.id, 'auto');
+        this.send('create', this.id, 'auto');
     }
 
     /**
@@ -80,7 +82,7 @@ class GoogleAnalyticsMetric extends MetricInterface {
                 };
             }
 
-            this.controller('send', payload);
+            this.send('send', payload);
             this.log('GOAL', payload);
 
         } catch (error) {
@@ -104,8 +106,8 @@ class GoogleAnalyticsMetric extends MetricInterface {
                 };
             }
 
-            this.controller('set', 'page', payload.to);
-            this.controller('send', 'pageview');
+            this.send('set', 'page', payload.to);
+            this.send('send', 'pageview');
             this.log('HIT', payload);
 
         } catch (error) {
