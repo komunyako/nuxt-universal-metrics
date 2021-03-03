@@ -20,9 +20,9 @@ class GoogleTagManagerMetric extends MetricInterface {
         }
 
         this.request = loader.gtm(this.globalName, { id: this.id });
-        this.controller = window[this.globalName];
 
         this.request.then(() => {
+            this.controller = window[this.globalName];
             this.onLoaded();
         });
 
@@ -40,13 +40,24 @@ class GoogleTagManagerMetric extends MetricInterface {
                 this.globalName = layer;
             }
 
+            this.initController();
             this.load();
-
             this.log('INIT');
 
         } catch (error) {
             this.controller = undefinedMetric;
             console.error(error);
+        }
+    }
+
+    initController() {
+        // Инициализируем глобальные переменные чтобы можно было уже записывать события
+        if (window[this.globalName]) {
+            this.controller = window[this.globalName];
+        } else {
+            this.controller = window[this.globalName] = window[this.globalName] || [];
+
+            window[this.globalName].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
         }
     }
 
@@ -111,8 +122,8 @@ class GoogleTagManagerMetric extends MetricInterface {
                 };
             }
 
-            this.log('HIT', payload);
             this.controller.push(payload);
+            this.log('HIT', payload);
 
         } catch (error) {
             console.error(error);

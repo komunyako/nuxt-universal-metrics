@@ -45,28 +45,10 @@ const loader = {
         return loader;
     },
     ym(namespace) {
-        return this.insert(namespace, 'https://mc.yandex.ru/metrika/tag.js', {
-            onBeforeLoad: () => {
-                // Инициализируем глобальные переменные чтобы можно было уже записывать события
-                window[namespace] = window[namespace] || function() {
-                    (window[namespace].a = window[namespace].a || []).push(arguments);
-                };
-
-                window[namespace].l = 1 * new Date();
-            }
-        });
+        return this.insert(namespace, 'https://mc.yandex.ru/metrika/tag.js');
     },
     ga(namespace) {
-        return this.insert(namespace, 'https://www.google-analytics.com/analytics.js', {
-            onBeforeLoad: () => {
-                // Инициализируем глобальные переменные чтобы можно было уже записывать события
-                window[namespace] = window[namespace] || function() {
-                    (window[namespace].q = window[namespace].q || []).push(arguments);
-                };
-
-                window[namespace].l = 1 * new Date();
-            }
-        });
+        return this.insert(namespace, 'https://www.google-analytics.com/analytics.js');
     },
 
     /**
@@ -78,14 +60,7 @@ const loader = {
             throw TypeError('[metrics] Не передан идентификатор метрики');
         }
 
-        return this.insert(namespace, `https://www.googletagmanager.com/gtm.js?id=${ options.id }${ namespace !== 'dataLayer' ? '&l=' + namespace : '' }`, {
-            onBeforeLoad: () => {
-                // Инициализируем глобальные переменные чтобы можно было уже записывать события
-                window[namespace] = window[namespace] || [];
-
-                window[namespace].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-            }
-        });
+        return this.insert(namespace, `https://www.googletagmanager.com/gtm.js?id=${ options.id }${ namespace !== 'dataLayer' ? '&l=' + namespace : '' }`);
     }
 };
 

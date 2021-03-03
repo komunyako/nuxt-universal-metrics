@@ -11,7 +11,6 @@ class GoogleAnalyticsMetric extends MetricInterface {
         this.globalName = 'ga';
         this.controller = undefinedMetric;
 
-        this.load();
         this.init();
     }
 
@@ -21,9 +20,9 @@ class GoogleAnalyticsMetric extends MetricInterface {
         }
 
         this.request = loader.ga(this.globalName);
-        this.controller = window[this.globalName];
 
         this.request.then(() => {
+            this.controller = window[this.globalName];
             this.onLoaded();
         });
 
@@ -34,12 +33,29 @@ class GoogleAnalyticsMetric extends MetricInterface {
         try {
             await super.init();
 
+            this.initController();
+            this.load();
             this.log('INIT');
 
         } catch (error) {
             this.controller = undefinedMetric;
             console.error(error);
         }
+    }
+
+    initController() {
+        // Инициализируем глобальные переменные чтобы можно было уже записывать события
+        if (window[this.globalName]) {
+            this.controller = window[this.globalName];
+        } else {
+            this.controller = window[this.globalName] = window[this.globalName] || function() {
+                (window[this.globalName].q = window[this.globalName].q || []).push(arguments);
+            };
+
+            window[this.globalName].l = 1 * new Date();
+        }
+
+        this.controller('create', this.id, 'auto');
     }
 
     /**
@@ -64,8 +80,8 @@ class GoogleAnalyticsMetric extends MetricInterface {
                 };
             }
 
-            this.log('GOAL', payload);
             this.controller('send', payload);
+            this.log('GOAL', payload);
 
         } catch (error) {
             console.error(error);
@@ -88,9 +104,9 @@ class GoogleAnalyticsMetric extends MetricInterface {
                 };
             }
 
-            this.log('HIT', payload);
             this.controller('set', 'page', payload.to);
             this.controller('send', 'pageview');
+            this.log('HIT', payload);
 
         } catch (error) {
             console.error(error);

@@ -11,7 +11,6 @@ class YandexMetric extends MetricInterface {
         this.globalName = 'ym';
         this.controller = undefinedMetric;
 
-        this.load();
         this.init();
     }
 
@@ -21,9 +20,9 @@ class YandexMetric extends MetricInterface {
         }
 
         this.request = loader.ym(this.globalName);
-        this.controller = window[this.globalName];
 
         this.request.then(() => {
+            this.controller = window[this.globalName];
             this.onLoaded();
         });
 
@@ -34,11 +33,26 @@ class YandexMetric extends MetricInterface {
         try {
             await super.init();
 
+            this.initController();
+            this.load();
             this.log('INIT');
 
         } catch (error) {
             this.controller = undefinedMetric;
             console.error(error);
+        }
+    }
+
+    initController() {
+        // Инициализируем глобальные переменные чтобы можно было уже записывать события
+        if (window[this.globalName]) {
+            this.controller = window[this.globalName];
+        } else {
+            this.controller = window[this.globalName] = window[this.globalName] || function() {
+                (window[this.globalName].a = window[this.globalName].a || []).push(arguments);
+            };
+
+            window[this.globalName].l = 1 * new Date();
         }
     }
 
