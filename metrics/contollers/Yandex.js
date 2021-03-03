@@ -59,7 +59,7 @@ class YandexMetric extends MetricInterface {
             }
 
             this.log('GOAL', payload);
-            this.controller('reachGoal', payload.target, extra);
+            this.controller(this.id, 'reachGoal', payload.target, extra);
 
         } catch (error) {
             console.error(error);
@@ -83,7 +83,7 @@ class YandexMetric extends MetricInterface {
             }
 
             this.log('HIT', payload);
-            this.controller('hit', payload.to);
+            this.controller(this.id, 'hit', payload.to);
 
         } catch (error) {
             console.error(error);
