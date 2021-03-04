@@ -113,12 +113,14 @@ class GoogleTagManagerMetric extends MetricInterface {
             if (typeof payload === 'string') {
                 // Если передана стока, преобразуем в HitPayload
                 payload = {
+                    event: 'pageview',
                     pageType: 'PageView',
                     pageUrl: payload
                 };
 
             } else {
                 payload = {
+                    event: 'pageview',
                     pageType: 'PageView',
                     pageUrl: payload.to
                 };
