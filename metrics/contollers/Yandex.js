@@ -6,8 +6,26 @@ class YandexMetric extends MetricInterface {
     constructor(id) {
         super();
 
+        this.defaultConfig = {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        };
+
+        if (id === Object(id)) {
+            const { id: _id, ...config } = id;
+            this.id = _id;
+            this.config = {
+                ...this.defaultConfig,
+                ...config
+            };
+
+        } else {
+            this.config = { ...this.defaultConfig };
+        }
+
         this.name = 'Yandex';
-        this.id = id;
         this.globalName = 'ym';
         this.controller = undefinedMetric;
 
@@ -56,6 +74,8 @@ class YandexMetric extends MetricInterface {
 
             this.controller.l = 1 * new Date();
         }
+
+        this.send(this.id, 'init', this.config);
     }
 
     /**

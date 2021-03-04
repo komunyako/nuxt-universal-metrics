@@ -15,7 +15,7 @@ function getIds(ids) {
     } else if (Array.isArray(ids)) {
         return ids.reduce((result, id) => result.concat(getIds(id)), []);
 
-    } else if (type === 'string' || type === 'number') {
+    } else if (type === 'string' || type === 'number' || type === 'object') {
         return [ids];
     }
 
