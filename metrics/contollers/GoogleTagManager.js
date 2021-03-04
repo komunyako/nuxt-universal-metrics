@@ -71,7 +71,7 @@ class GoogleTagManagerMetric extends MetricInterface {
             return undefinedMetric.apply(null, arguments);
         }
 
-        return this.controller.push(arguments);
+        return this.controller.push(...arguments);
     }
 
     /**
